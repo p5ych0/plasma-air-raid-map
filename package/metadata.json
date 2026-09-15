@@ -1,0 +1,15 @@
+{
+    "KPackageStructure": "Plasma/Wallpaper",
+    "KPlugin": {
+        "Id": "io.github.p5ych0.airraidmap",
+        "Name": "Air Raid Map",
+        "Description": "A live, display-only map of air-raid alerts in Ukraine",
+        "Icon": "globe",
+        "Version": "0.1.0",
+        "License": "MIT",
+        "Website": "https://github.com/p5ych0/plasma-air-raid-map",
+        "Authors": [{ "Name": "p5ych0" }]
+    },
+    "X-KDE-ParentApp": "org.kde.plasmashell",
+    "X-Plasma-API-Minimum-Version": "6.0"
+}
