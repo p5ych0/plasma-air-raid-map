@@ -5,12 +5,31 @@ import "../package/contents/ui"
 import "../package/contents/ui/MapData.js" as Data
 
 Window {
+    id: preview
     width: 1280
     height: 720
     visible: true
+    readonly property bool withPanels: Qt.application.arguments.includes("--panels")
     AlertMap {
         id: map
         anchors.fill: parent
+        availableRect: preview.withPanels ? Qt.rect(84, 92, width - 188, height - 188)
+                                          : Qt.rect(0, 0, width, height)
+        Repeater {
+            model: preview.withPanels ? [
+                {x: 0, y: 0, w: map.width, h: 92},
+                {x: 0, y: map.height - 96, w: map.width, h: 96},
+                {x: 0, y: 92, w: 84, h: map.height - 188},
+                {x: map.width - 104, y: 92, w: 104, h: map.height - 188}
+            ] : []
+            delegate: Rectangle {
+                required property var modelData
+                x: modelData.x; y: modelData.y
+                width: modelData.w; height: modelData.h
+                color: "#475569"
+                Text { anchors.centerIn: parent; text: "PANEL"; color: "white"; font.pixelSize: 10 }
+            }
+        }
         source: AlertSource {
             autoRefresh: false
             Component.onCompleted: {
@@ -39,7 +58,8 @@ Window {
         interval: 1000
         running: true
         onTriggered: map.grabToImage(function(result) {
-            if (!result.saveToFile("/tmp/plasma-air-raid-threat-symbols.png")) { Qt.exit(1); return; }
+            const path = preview.withPanels ? "/tmp/plasma-air-raid-panels.png" : "/tmp/plasma-air-raid-threat-symbols.png";
+            if (!result.saveToFile(path)) { Qt.exit(1); return; }
             map.source.threatsError = "Synthetic outage";
             staleCapture.start();
         })

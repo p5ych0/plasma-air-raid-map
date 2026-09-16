@@ -11,8 +11,21 @@ Item {
     readonly property int threatsUpdateCount: root.source.threatsUpdateCount
     readonly property bool threatsStale: root.source.threatsStale
     property AlertSource source: AlertSource {}
+    property rect availableRect: Qt.rect(0, 0, width, height)
+    readonly property rect usableRect: availableRect.width > 0 && availableRect.height > 0
+                                       ? availableRect : Qt.rect(0, 0, width, height)
 
     Rectangle { anchors.fill: parent; color: "#0e1722" }
+
+    // Keep text clear of panels on every edge, with room for floating/hidden bars.
+    Item {
+        id: textArea
+        anchors.fill: parent
+        anchors.leftMargin: Math.max(64, root.usableRect.x + 20)
+        anchors.topMargin: Math.max(64, root.usableRect.y + 20)
+        anchors.rightMargin: Math.max(64, root.width - root.usableRect.x - root.usableRect.width + 20)
+        anchors.bottomMargin: Math.max(64, root.height - root.usableRect.y - root.usableRect.height + 20)
+    }
 
     Canvas {
         id: canvas
@@ -114,9 +127,8 @@ Item {
     }
 
     Text {
-        anchors.left: parent.left
-        anchors.top: parent.top
-        anchors.margins: 28
+        anchors.left: textArea.left
+        anchors.top: textArea.top
         text: "ПОВІТРЯНІ ТРИВОГИ"
         color: "#e6edf5"
         font.pixelSize: Math.max(16, Math.min(26, root.width / 50))
@@ -124,9 +136,8 @@ Item {
         font.letterSpacing: 2
     }
     Text {
-        anchors.right: parent.right
-        anchors.top: parent.top
-        anchors.margins: 28
+        anchors.right: textArea.right
+        anchors.top: textArea.top
         text: (root.source.stale ? (root.source.lastSuccess ? "ДАНІ ЗАСТАРІЛИ" : "ОЧІКУВАННЯ ДАНИХ")
                         : "Тривоги: " + Qt.formatTime(new Date(root.source.lastSuccess), "HH:mm:ss"))
             + "\n" + (root.source.threatsStale ? "Загрози: немає актуальних даних"
@@ -137,7 +148,7 @@ Item {
         font.pixelSize: Math.max(11, Math.min(15, root.width / 85))
     }
     Text {
-        anchors.centerIn: parent
+        anchors.centerIn: textArea
         visible: root.source.stale
         text: root.source.oblasts ? "Немає актуальних даних тривог\nПовторна спроба автоматично" : "Завантаження мапи…"
         horizontalAlignment: Text.AlignHCenter
@@ -149,13 +160,12 @@ Item {
     }
     Column {
         id: areaReports
-        anchors.left: parent.left
-        anchors.top: parent.top
-        anchors.leftMargin: 28
-        anchors.topMargin: 78
+        anchors.left: textArea.left
+        anchors.top: textArea.top
+        anchors.topMargin: 50
         width: Math.min(280, root.width * 0.24)
         spacing: 5
-        readonly property int limit: Math.max(1, Math.floor((root.height - 210) / 64))
+        readonly property int limit: Math.max(1, Math.floor((textArea.height - 120) / 64))
         visible: !root.source.threatsStale && root.source.threats !== null
                  && root.source.threats.areas.length > 0
         Text {
@@ -196,9 +206,8 @@ Item {
         }
     }
     Text {
-        anchors.left: parent.left
-        anchors.bottom: parent.bottom
-        anchors.margins: 28
+        anchors.left: textArea.left
+        anchors.bottom: textArea.bottom
         text: '<font color="#cf4655">●</font> Червоний рівень   '
             + '<font color="#c69235">●</font> Жовтий рівень   '
             + '<font color="#7590a8">●</font> Без активної тривоги'
@@ -207,9 +216,8 @@ Item {
         font.pixelSize: Math.max(10, Math.min(13, root.width / 100))
     }
     Text {
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        anchors.margins: 28
+        anchors.right: textArea.right
+        anchors.bottom: textArea.bottom
         text: 'Дані: <a style="color:#8fc8ff" href="https://neptun.in.ua/">NEPTUN</a><br>'
             + 'Дотримуйтеся офіційних сигналів тривоги.'
         textFormat: Text.RichText

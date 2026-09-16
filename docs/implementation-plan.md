@@ -35,6 +35,10 @@ credit FullyRealist/LivelyAirRaidAlert for the original idea.
 Release packaging: `python3 scripts/package.py` creates the installable ZIP
 and checksum for publication with the repository's tagged release.
 
+Corner text uses Plasma's screen-local `Containment.availableScreenRect`,
+with 20 pixels of additional clearance and a minimum 64-pixel inset on each edge.
+The visual preview's `--panels` option checks panels on all four sides.
+
 ## Rendering decision
 
 Use native Qt Quick 2D drawing and JSON requests. This keeps browser engines

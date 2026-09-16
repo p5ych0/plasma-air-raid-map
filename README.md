@@ -17,6 +17,10 @@ public alert, threat, and boundary data.
 The plugin uses the Qt Quick components included with Plasma. It does not
 require Qt WebEngine, a browser, Node.js, API keys, or a background service.
 
+Corner text follows Plasma's available desktop area as panels move or resize.
+It stays at least 64 logical pixels from every screen edge and 20 pixels inside
+the area reserved by Plasma for the desktop. The map background remains full-screen.
+
 ## Install
 
 From a checkout:
@@ -119,6 +123,8 @@ QT_QPA_PLATFORM=offscreen QT_QUICK_BACKEND=software \
 It saves `/tmp/plasma-air-raid-threat-symbols.png` and
 `/tmp/plasma-air-raid-threat-outage.png`. These contain clearly labelled synthetic
 data; fixtures are not included in the installed wallpaper.
+Append `-- --panels` to the same preview command to simulate panels on all four edges
+and save `/tmp/plasma-air-raid-panels.png` for checking text clearance.
 
 Build the installable release ZIP with `python3 scripts/package.py`.
 The archive and its SHA-256 checksum are written to `dist/`.
