@@ -17,6 +17,39 @@ Item {
     property var currentRequest: null
     property int updateCount: 0
     readonly property bool stale: Data.isStale(lastSuccess, now, error !== "")
+    property var threats: null
+    property double threatsLastSuccess: 0
+    property string threatsError: ""
+    property var threatsRequest: null
+    property int threatsUpdateCount: 0
+    readonly property bool threatsStale: Data.isStale(threatsLastSuccess, now, threatsError !== "")
+
+    function acceptThreats(payload) {
+        const next = Data.parseThreats(payload);
+        threats = next;
+        threatsLastSuccess = Date.now();
+        now = threatsLastSuccess;
+        threatsError = "";
+        ++threatsUpdateCount;
+    }
+
+    // Independent requests keep the alert map updating if the threat endpoint fails.
+    function refreshThreats() {
+        if (threatsRequest !== null) return;
+        const xhr = new XMLHttpRequest();
+        threatsRequest = xhr;
+        threatsTimeout.restart();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState !== XMLHttpRequest.DONE || root.threatsRequest !== xhr) return;
+            root.threatsRequest = null;
+            threatsTimeout.stop();
+            if (xhr.status !== 200) { root.threatsError = "HTTP " + xhr.status; return; }
+            try { root.acceptThreats(JSON.parse(xhr.responseText)); }
+            catch (e) { root.threatsError = String(e); }
+        };
+        xhr.open("GET", apiBase + "/api/v1/threats");
+        xhr.send();
+    }
 
     function acceptSnapshot(payload) {
         const next = Data.parseSnapshot(payload, oblasts, raions);
@@ -69,10 +102,20 @@ Item {
         }
     }
     Timer {
+        id: threatsTimeout
+        interval: 15000
+        onTriggered: {
+            const xhr = root.threatsRequest;
+            root.threatsRequest = null;
+            root.threatsError = "Network timeout";
+            if (xhr !== null) xhr.abort();
+        }
+    }
+    Timer {
         interval: root.pollInterval
         repeat: true
         running: root.autoRefresh
-        onTriggered: root.refresh()
+        onTriggered: { root.refresh(); root.refreshThreats(); }
     }
     Timer {
         interval: 1000
@@ -80,11 +123,15 @@ Item {
         running: true
         onTriggered: root.now = Date.now()
     }
-    Component.onCompleted: if (autoRefresh) refresh()
+    Component.onCompleted: if (autoRefresh) { refresh(); refreshThreats(); }
     Component.onDestruction: {
         if (currentRequest !== null) {
             currentRequest.onreadystatechange = function() {};
             currentRequest.abort();
+        }
+        if (threatsRequest !== null) {
+            threatsRequest.onreadystatechange = function() {};
+            threatsRequest.abort();
         }
     }
 }

@@ -19,8 +19,9 @@ Window {
         interval: 20000
         running: true
         onTriggered: {
-            if (map.stale || map.updateCount < 2) {
-                console.error("Native map did not receive repeated updates: " + map.updateCount);
+            if (map.stale || map.updateCount < 2 || map.threatsStale || map.threatsUpdateCount < 2) {
+                console.error("Native map did not receive repeated updates: alerts=" + map.updateCount
+                              + ", threats=" + map.threatsUpdateCount);
                 Qt.exit(1);
                 return;
             }
@@ -29,7 +30,8 @@ Window {
                     Qt.exit(1);
                     return;
                 }
-                console.info("Saved native map preview after " + map.updateCount + " valid updates");
+                console.info("Saved native map preview after " + map.updateCount + " alert updates and "
+                             + map.threatsUpdateCount + " threat updates; " + map.source.threats.count + " reports");
                 Qt.quit();
             });
         }

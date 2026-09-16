@@ -22,6 +22,16 @@ credit FullyRealist/LivelyAirRaidAlert for the original idea.
 - [x] Validate the package, install it, and verify Plasma remains healthy.
 - [x] Create the public repository with the original-idea credit.
 
+## Threat overlay (v0.2)
+
+- [x] Poll NEPTUN's separate threat feed independently of regional alerts.
+- [x] Draw all eight published threat types with native silhouettes and labels.
+- [x] Preserve supplied counts and distinguish approximate/advisory reports.
+- [x] Display area-only reports in a list rather than at an invented location.
+- [x] Replace full snapshots; hide markers on failure or stale data.
+- [x] Check parsing, replacement, independent freshness, and all symbol types.
+- [x] Check final live rendering, package upgrade, and Plasma health.
+
 Release packaging: `python3 scripts/package.py` creates the installable ZIP
 and checksum for publication with the repository's tagged release.
 
@@ -39,6 +49,9 @@ embedding its interactive web application.
 - `package/contents/ui/AlertMap.qml`: map drawing and status/attribution labels.
 - `package/contents/ui/AlertSource.qml`: network requests, retry, freshness.
 - `package/contents/ui/MapData.js`: geometry and alert-response validation.
+- `package/contents/ui/ThreatSymbols.js`: native threat silhouettes and badge placement.
 - `tests/tst_alertdata.qml`: data-contract tests with synthetic fixtures.
+- `tests/tst_threatdata.qml`, `tests/tst_threatsource.qml`: threat parsing and freshness checks.
+- `tests/preview-threats.qml`: offline symbol and outage visual fixtures.
 - `tests/preview.qml`: live-provider rendering and update check.
 - `README.md`, `LICENSE`: installation, original-idea attribution, and license.

@@ -9,5 +9,10 @@ WallpaperItem {
             if (updateCount === 1)
                 console.info("Air Raid Map (native): first valid alert snapshot received");
         }
+        onThreatsUpdateCountChanged: {
+            if (threatsUpdateCount === 1)
+                console.info("Air Raid Map (native): first valid threat snapshot received ("
+                             + source.threats.count + " reports)");
+        }
     }
 }

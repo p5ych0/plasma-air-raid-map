@@ -80,3 +80,39 @@ function parseSnapshot(payload, oblasts, raions) {
 function isStale(lastSuccess, now, failed) {
     return failed || lastSuccess <= 0 || now - lastSuccess >= 90000;
 }
+
+function parseThreats(payload) {
+    if (!payload || !Array.isArray(payload.threats)) throw new Error("Invalid threat response");
+    const labels = {uav: "БпЛА", fpv: "FPV", recon: "Розвідка", missile: "Ракета",
+                    ballistic: "Балістика", kab: "КАБ", mig31k: "МіГ-31К", unknown: "Невідома"};
+    const result = {points: [], areas: [], count: 0}, seen = {};
+    for (const entry of payload.threats) {
+        if (!entry || typeof entry.id !== "string" || !entry.id || seen["@" + entry.id]
+            || typeof entry.type !== "string" || !["active", "stale", "resolved"].includes(entry.status))
+            throw new Error("Invalid threat identity or status");
+        seen["@" + entry.id] = true;
+        if (entry.status !== "active") continue;
+        for (const flag of ["advisory", "areaOnly"]) {
+            if (entry[flag] !== undefined && typeof entry[flag] !== "boolean")
+                throw new Error("Invalid threat flag");
+        }
+        const areaOnly = entry.areaOnly === true;
+        if (areaOnly && (typeof entry.region !== "string" || !entry.region.trim()))
+            throw new Error("Area-only threat has no region");
+        const type = Object.prototype.hasOwnProperty.call(labels, entry.type) ? entry.type : "unknown";
+        const threat = {
+            id: entry.id, type: type, label: labels[type],
+            point: areaOnly ? null : project([entry.lon, entry.lat]),
+            region: areaOnly ? entry.region : "",
+            advisory: entry.advisory === true,
+            approximate: entry.positionQuality === "approx",
+            // A provider-estimated course is not a measured direction.
+            heading: !areaOnly && entry.presumptiveCourse !== true && Number.isFinite(entry.heading)
+                     ? ((entry.heading % 360) + 360) % 360 : null,
+            count: Number.isInteger(entry.count) && entry.count > 0 ? entry.count : 0
+        };
+        result[areaOnly ? "areas" : "points"].push(threat);
+        ++result.count;
+    }
+    return result;
+}
