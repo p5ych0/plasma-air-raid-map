@@ -9,6 +9,8 @@ that idea for Linux and KDE Plasma. Credit for the original wallpaper idea
 belongs to FullyRealist. This implementation draws a native map using NEPTUN's
 public alert, threat, and boundary data.
 
+![Air Raid Map running on KDE Plasma, with regional alert colors, small threat icons, and text below the top panel](docs/images/kde-plasma-air-raid-map.png)
+
 ## Requirements
 
 - KDE Plasma 6 on Linux.
