@@ -25,8 +25,8 @@ credit FullyRealist/LivelyAirRaidAlert for the original idea.
 ## Threat overlay (v0.2)
 
 - [x] Poll NEPTUN's separate threat feed independently of regional alerts.
-- [x] Draw all eight published threat types with native silhouettes and labels.
-- [x] Preserve supplied counts and distinguish approximate/advisory reports.
+- [x] Draw all eight published threat types with small transparent silhouettes.
+- [x] Preserve provider fields and distinguish advisory reports with blue symbols.
 - [x] Display area-only reports in a list rather than at an invented location.
 - [x] Replace full snapshots; hide markers on failure or stale data.
 - [x] Check parsing, replacement, independent freshness, and all symbol types.
@@ -49,7 +49,7 @@ embedding its interactive web application.
 - `package/contents/ui/AlertMap.qml`: map drawing and status/attribution labels.
 - `package/contents/ui/AlertSource.qml`: network requests, retry, freshness.
 - `package/contents/ui/MapData.js`: geometry and alert-response validation.
-- `package/contents/ui/ThreatSymbols.js`: native threat silhouettes and badge placement.
+- `package/contents/ui/ThreatSymbols.js`: native threat silhouettes at reported positions.
 - `tests/tst_alertdata.qml`: data-contract tests with synthetic fixtures.
 - `tests/tst_threatdata.qml`, `tests/tst_threatsource.qml`: threat parsing and freshness checks.
 - `tests/preview-threats.qml`: offline symbol and outage visual fixtures.

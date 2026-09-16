@@ -91,16 +91,14 @@ Item {
             }
 
             if (root.source.threats && !root.source.threatsStale) {
-                const size = Math.max(20, Math.min(30, width / 55));
-                const reports = [];
+                const size = Math.max(12, Math.min(16, width / 90));
                 for (const threat of root.source.threats.points) {
                     const x = ox + (threat.point[0] - b[0]) * scale;
                     const y = oy + (threat.point[1] - b[1]) * scale;
                     // Do not clamp off-map reports to a false position at the edge.
                     if (x < 0 || x > width || y < 80 || y > height - 60) continue;
-                    reports.push({threat: threat, x: x, y: y});
+                    Symbols.marker(ctx, threat, x, y, size);
                 }
-                Symbols.markers(ctx, reports, size, width, height);
             }
         }
     }

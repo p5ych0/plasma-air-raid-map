@@ -46,14 +46,16 @@ kpackagetool6 --type Plasma/Wallpaper --remove io.github.p5ych0.airraidmap
 
 - District and oblast alert areas, with Ukrainian labels.
 - Red and yellow alert levels as supplied by NEPTUN.
-- Symbols and Ukrainian type labels for drones, FPV drones, reconnaissance
+- Small transparent symbols for drones, FPV drones, reconnaissance
   aircraft, cruise missiles, ballistic missiles, guided bombs (КАБ), MiG-31K
-  aircraft, and unknown threats. Group sizes appear when provided.
-- Approximate locations are marked **≈**. Crowded badges move aside with a
-  line back to the reported point. Directions are used only when supplied
-  without the provider's presumed-course flag.
+  aircraft, and unknown threats. Icons are 12–16 logical pixels, with no
+  background or type labels. Groups show only a small **×2**, **×3**, etc.;
+  single reports have no text. Each icon stays at its reported position.
+  Directions are used only when supplied without the provider's
+  presumed-course flag.
 - Region-only reports appear in a separate list, never as invented point
-  locations. Advisory observations are blue and labelled **Спостереження**.
+  locations. Advisory icons are blue; advisory region-only reports are also
+  labelled **Спостереження**.
 - Separate times for the last successfully validated alert and threat responses.
 - A prominent stale-data message after a failed request or 90 seconds without
   a successful response. Old alert colors are dimmed; old threat markers are

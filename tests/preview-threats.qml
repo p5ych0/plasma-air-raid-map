@@ -31,7 +31,6 @@ Window {
                     region: "Тестова область", heading: 180});
                 entries.push({id: "advisory", type: "mig31k", status: "active", areaOnly: true,
                     region: "Інша область", advisory: true});
-                entries.push({id: "crowded", type: "kab", status: "active", lon: 25, lat: 49});
                 acceptThreats({threats: entries});
             }
         }
